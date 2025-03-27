@@ -1,0 +1,16 @@
+﻿@model IEnumerable<Incidencias.Core.Models.Tecnico>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tecnico in Model)
+        {
+            @Html.Partial("_TecnicoRow", tecnico)
+        }
+    </tbody>
+</table>

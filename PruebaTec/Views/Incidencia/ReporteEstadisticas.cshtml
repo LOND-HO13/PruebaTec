@@ -1,0 +1,74 @@
+﻿@model Incidencias.Core.Models.ReporteEstadisticasVM
+
+@{
+    ViewBag.Title = "Reporte Estadístico";
+}
+
+<div class="container mt-4">
+    <h2>Reporte de Incidencias</h2>
+
+    <!-- Estadísticas por Estado -->
+    <div class="card mb-4">
+        <div class="card-header bg-info text-white">
+            <h4>Por Estado</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Estado</th>
+                        <th>Cantidad</th>
+                        <th>Porcentaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.IncidenciasPorEstado)
+                    {
+                        double porcentaje = Model.TotalIncidencias > 0
+                            ? (item.Value * 100.0) / Model.TotalIncidencias
+                            : 0;
+
+                        <tr>
+                            <td>@item.Key</td>
+                            <td>@item.Value</td>
+                            <td>@porcentaje.ToString("0.00")%</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Estadísticas por Prioridad -->
+    <div class="card mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h4>Por Prioridad</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Prioridad</th>
+                        <th>Cantidad</th>
+                        <th>Porcentaje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.IncidenciasPorPrioridad)
+                    {
+                        <tr>
+                            <td>@item.Key</td>
+                            <td>@item.Value</td>
+                            <td>@((item.Value * 100.0 / Model.TotalIncidencias).ToString("0.00"))%</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Resumen General -->
+    <div class="alert alert-primary">
+        <h4>Total de incidencias registradas: @Model.TotalIncidencias</h4>
+    </div>
+</div>

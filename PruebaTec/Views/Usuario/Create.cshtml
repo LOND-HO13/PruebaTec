@@ -1,0 +1,54 @@
+﻿@using Incidencias.Core.Models
+@model Incidencias.Core.Models.Usuario
+
+<h2>Crear Usuario</h2>
+
+@using (Html.BeginForm("Create", "Usuario", FormMethod.Post, new { id = "usuarioForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Nombre)
+        @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Nombre)
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear Usuario</button>
+}
+
+<div id="usuariosTable">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in (List<Usuario>)ViewBag.Usuarios)
+            {
+                @Html.Partial("_UsuarioRow", usuario)
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $("#usuarioForm").submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (data) {
+                    $("#usuariosTable table tbody").append(data);
+                    $("#usuarioForm")[0].reset();
+                },
+                error: function () {
+                    alert("Error al crear el usuario");
+                }
+            });
+        });
+    </script>
+}

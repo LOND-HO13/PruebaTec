@@ -1,0 +1,116 @@
+﻿@using PagedList.Mvc
+@using PagedList
+@using Incidencias.Core.Models
+@model IPagedList<Incidencias.Core.Models.Incidencia>
+
+@{
+    ViewBag.Title = "Listado de Incidencias";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<!-- Barra de búsqueda -->
+@using (Html.BeginForm("Index", "Incidencia", FormMethod.Get))
+{
+    <div class="form-group">
+        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", placeholder = "Buscar..." })
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+}
+
+<!-- Tabla de incidencias -->
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Listado de Incidencias</h2>
+        @Html.ActionLink("Nueva Incidencia", "Create", null, new { @class = "btn btn-success" })
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Título</th>
+                    <th>Estado</th>
+                    <th>Prioridad</th>
+                    <th>Fecha Creación</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Titulo</td>
+                        <td>
+                            <span class="badge @GetEstadoBadge(item.Estado)">
+                                @item.Estado.ToString()
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-@GetPrioridadColor(item.Prioridad)">
+                                @item.Prioridad.ToString()
+                            </span>
+                        </td>
+                        <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-sm btn-primary" })
+                                @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-sm btn-info" })
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@functions {
+    string GetEstadoBadge(EstadoIncidencia estado)
+    {
+        switch (estado)
+        {
+            case EstadoIncidencia.Abierta:
+                return "bg-warning";
+            case EstadoIncidencia.EnProgreso:
+                return "bg-primary";
+            case EstadoIncidencia.Resuelta:
+                return "bg-success";
+            default:
+                return "bg-secondary";
+        }
+    }
+
+    string GetPrioridadColor(PrioridadIncidencia prioridad)
+    {
+        switch (prioridad)
+        {
+            case PrioridadIncidencia.Critica:
+                return "danger";
+            case PrioridadIncidencia.Alta:
+                return "warning";
+            case PrioridadIncidencia.Media:
+                return "primary";
+            default:
+                return "secondary";
+        }
+    }
+}
+<style>
+    .table-hover tbody tr:hover {
+        background-color: #f8f9fa;
+        transition: background-color 0.3s ease;
+    }
+
+    .badge {
+        font-size: 0.9em;
+        padding: 0.5em 0.75em;
+    }
+
+    .btn-group .btn {
+        margin: 2px;
+        border-radius: 4px !important;
+    }
+</style>
+<!-- Paginación -->
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

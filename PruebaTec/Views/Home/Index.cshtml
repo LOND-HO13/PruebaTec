@@ -1,0 +1,44 @@
+﻿@using PagedList.Mvc
+@using PagedList
+@model IPagedList<Incidencias.Core.Models.Incidencia>
+
+@{
+    ViewBag.Title = "Listado de Incidencias";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<!-- Barra de búsqueda -->
+@using (Html.BeginForm("Index", "Incidencia", FormMethod.Get))
+{
+    <div class="form-group">
+        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", placeholder = "Buscar..." })
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+}
+
+<!-- Tabla de incidencias -->
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>@Html.ActionLink("Título", "Index", new { sortOrder = ViewBag.NameSortParam })</th>
+            <th>Estado</th>
+            <th>Prioridad</th>
+            <th>@Html.ActionLink("Fecha Creación", "Index", new { sortOrder = ViewBag.DateSortParam })</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Titulo</td>
+                <td>@item.Estado</td>
+                <td>@item.Prioridad</td>
+                <td>@item.FechaCreacion.ToString("dd/MM/yyyy")</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<!-- Paginación -->
+@Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

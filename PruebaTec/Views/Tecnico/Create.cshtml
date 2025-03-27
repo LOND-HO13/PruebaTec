@@ -1,0 +1,54 @@
+﻿@using Incidencias.Core.Models
+@model Incidencias.Core.Models.Tecnico
+
+<h2>Crear Técnico</h2>
+
+@using (Html.BeginForm("Create", "Tecnico", FormMethod.Post, new { id = "tecnicoForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Nombre)
+        @Html.TextBoxFor(model => model.Nombre, new { @class = "form-control" })
+        @Html.ValidationMessageFor(model => model.Nombre)
+    </div>
+
+    <button type="submit" class="btn btn-primary">Crear Técnico</button>
+}
+
+<div id="tecnicosTable">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tecnico in (List<Tecnico>)ViewBag.Tecnicos)
+            {
+                @Html.Partial("_TecnicoRow", tecnico)
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $("#tecnicoForm").submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: $(this).attr('action'),
+                type: 'POST',
+                data: $(this).serialize(),
+                success: function (data) {
+                    $("#tecnicosTable table tbody").append(data);
+                    $("#tecnicoForm")[0].reset();
+                },
+                error: function () {
+                    alert("Error al crear el técnico");
+                }
+            });
+        });
+    </script>
+}

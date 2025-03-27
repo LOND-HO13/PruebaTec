@@ -1,0 +1,162 @@
+﻿@model Incidencias.Core.Models.Incidencia
+
+<div class="card shadow">
+    <div class="card-header bg-primary text-white">
+        <h3 class="card-title mb-0"><i class="fas fa-plus-circle me-2"></i>Nueva Incidencia</h3>
+    </div>
+
+    <div class="card-body">
+        @using (Html.BeginForm("Create", "Incidencia", FormMethod.Post, new { id = "createForm", @class = "needs-validation", novalidate = "novalidate" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="row g-4">
+                <!-- Columna Izquierda -->
+                <div class="col-md-6">
+                    <div class="form-floating mb-3">
+                        @Html.TextBoxFor(model => model.Titulo, new { @class = "form-control", placeholder = " " })
+                        @Html.LabelFor(model => model.Titulo)
+                        <div class="invalid-feedback">
+                            Por favor ingrese un título
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        @Html.TextAreaFor(model => model.Descripcion, new { @class = "form-control", placeholder = " ", style = "height: 120px" })
+                        @Html.LabelFor(model => model.Descripcion)
+                        <div class="invalid-feedback">
+                            Descripción requerida
+                        </div>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        @Html.TextArea("comentarioInicial", new { @class = "form-control", placeholder = " ", rows = "3" })
+                        <label>Comentario Inicial</label>
+                        <div class="invalid-feedback">
+                            Comentario obligatorio
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha -->
+                <div class="col-md-6">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <div class="form-floating">
+                                @Html.DropDownListFor(model => model.TecnicoAsignadoId, ViewBag.TecnicoAsignadoId as SelectList, "Seleccione...", new { @class = "form-select" })
+                                @Html.LabelFor(model => model.TecnicoAsignadoId)
+                                <div class="invalid-feedback">
+                                    Seleccione un técnico
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="form-floating">
+                                @Html.DropDownListFor(model => model.UsuarioReportaId, ViewBag.UsuarioReportaId as SelectList, "Seleccione...", new { @class = "form-select" })
+                                @Html.LabelFor(model => model.UsuarioReportaId)
+                                <div class="invalid-feedback">
+                                    Seleccione un usuario
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                @Html.EnumDropDownListFor(model => model.Estado, "Seleccione...", new { @class = "form-select" })
+                                @Html.LabelFor(model => model.Estado)
+                                <div class="invalid-feedback">
+                                    Estado requerido
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                @Html.EnumDropDownListFor(model => model.Prioridad, "Seleccione...", new { @class = "form-select" })
+                                @Html.LabelFor(model => model.Prioridad)
+                                <div class="invalid-feedback">
+                                    Prioridad requerida
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <i class="fas fa-save me-2"></i>Crear Incidencia
+                </button>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Inicializar tooltips
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+        // Validación personalizada
+        document.addEventListener('DOMContentLoaded', function () {
+            var forms = document.querySelectorAll('.needs-validation')
+
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })
+
+        // Animación al agregar comentario
+        function addComment(commentHtml) {
+            const container = $('.comments-container')
+            const newComment = $(commentHtml).hide()
+            container.prepend(newComment)
+            newComment.fadeIn(500)
+            container.animate({ scrollTop: 0 }, 300)
+        }
+    </script>
+}
+
+<style>
+    .comments-container::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .comments-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    .comments-container::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+
+    .form-floating > label {
+        padding-left: 2.5rem;
+    }
+
+    .form-floating > .form-control,
+    .form-floating > .form-select {
+        padding-left: 2.5rem;
+    }
+
+    .form-floating .fa {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 3;
+        color: #6c757d;
+    }
+</style>

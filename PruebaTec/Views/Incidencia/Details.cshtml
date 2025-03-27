@@ -1,0 +1,58 @@
+﻿@model Incidencias.Core.Models.Incidencia
+@using Incidencias.Core.Models
+
+@{
+    ViewBag.Title = "Detalle de Incidencia";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3>@Model.Titulo</h3>
+        </div>
+
+        <div class="card-body">
+            <!-- Información Básica -->
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <p>
+                        <strong>Estado:</strong>
+                        <span class="badge bg-warning">@Model.Estado.ToString()</span>
+                    </p>
+                    <p>
+                        <strong>Prioridad:</strong>
+                        <span class="text-danger">@Model.Prioridad.ToString()</span>
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Fecha Creación:</strong> @Model.FechaCreacion.ToString("dd/MM/yyyy")</p>
+                    <p><strong>Última Actualización:</strong> @Model.FechaActualizacion.ToString("dd/MM/yyyy")</p>
+                </div>
+            </div>
+
+            <!-- Descripción -->
+            <div class="mb-4">
+                <h5>Descripción</h5>
+                <div class="alert alert-light">@Model.Descripcion</div>
+            </div>
+
+            <!-- Comentarios -->
+            <div class="mb-4">
+                <h5>Comentarios</h5>
+                @foreach (var comentario in Model.Comentarios)
+                {
+                    <div class="card mb-2">
+                        <div class="card-body">
+                            <p class="card-text">@comentario.Contenido</p>
+                            <small class="text-muted">@comentario.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="card-footer">
+            @Html.ActionLink("Volver", "Index", null, new { @class = "btn btn-secondary" })
+        </div>
+    </div>
+</div>
