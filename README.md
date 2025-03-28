@@ -28,6 +28,21 @@ Hacer clic derecho en la solución > Restaurar paquetes NuGet.
 Ejecutar las migraciones desde la Consola del Administrador de Paquetes:
 Update-Database
 
+📝 Datos Iniciales
+Crear Usuarios y Técnicos
+Ejecutar este script SQL después de crear la base de datos:
+INSERT INTO Usuarios (Nombre, Email) VALUES  
+('Juan Pérez', 'juan@example.com'),  
+('María García', 'maria@example.com');  
+
+INSERT INTO Tecnicos (Nombre, Especialidad) VALUES  
+('Pedro López', 'Hardware'),  
+('Ana Martínez', 'Software');  
+
+y si no lo desea asi, inicie desde la vista index de incidencia,
+registre un usuario y un tecnico desde la barra de menu.
+
+
 🖥 Ejecución
 En Visual Studio, presiona F5 o Iniciar Depuración.
 
